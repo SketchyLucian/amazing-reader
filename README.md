@@ -2,6 +2,11 @@
 
 A small Flutter reader app with local PDF support for Android, Windows, and web.
 
+## Project docs
+
+- [Documentation index](docs/README.md)
+- [MVP UI/UX plan](docs/ui-ux-plan.md)
+
 ## Development
 
 ```bash

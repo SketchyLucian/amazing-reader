@@ -231,19 +231,9 @@ class FlipProcess {
     final y = calc!.getCorner() == FlipCorner.bottom ? rect.height : 0;
 
     final progress = calc!.getFlippingProgress() / 100.0;
+    final complete = progress >= _completionProgressThreshold;
 
-    // If user holds near bottom and releases with small horizontal movement but high progress,
-    // force completion to avoid page freezing visually at bottom corner.
-    if (progress > 0.35 && calc!.getCorner() == FlipCorner.bottom) {
-      animateFlippingTo(
-        pos,
-        Point(-rect.pageWidth.toDouble(), y.toDouble()),
-        true,
-      );
-      return;
-    }
-
-    if (progress > 0.5) {
+    if (complete) {
       animateFlippingTo(
         pos,
         Point(-rect.pageWidth.toDouble(), y.toDouble()),
@@ -276,9 +266,9 @@ class FlipProcess {
       if (swipeTowardsCenter) {
         progress += settings.inertiaProgressBoost;
       }
-      complete = progress >= 0.5;
+      complete = progress >= _completionProgressThreshold;
     } else {
-      complete = progress > 0.5;
+      complete = progress >= _completionProgressThreshold;
     }
 
     if (complete) {
@@ -412,6 +402,12 @@ class FlipProcess {
 
   /// Cubic easing function for smooth animations
   double _easeOutCubic(double t) => 1 - math.pow(1 - t, 3).toDouble();
+
+  double get _completionProgressThreshold {
+    return app.getSettings.completionProgressThreshold
+        .clamp(0.05, 0.95)
+        .toDouble();
+  }
 
   /// Get animation duration for the given number of frames
   double _getAnimationDuration(int frameCount) {

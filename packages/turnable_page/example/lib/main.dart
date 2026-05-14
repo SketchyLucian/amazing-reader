@@ -40,17 +40,7 @@ class _AnimationTestPageState extends State<_AnimationTestPage> {
   void initState() {
     super.initState();
     _controller = PageFlipController();
-    _displayItemsFromMockApi.addAll([
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-    ]);
-
+    _displayItemsFromMockApi.addAll(["1", "2", "3", "4", "5", "6", "7", "8"]);
   }
 
   @override

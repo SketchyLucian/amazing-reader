@@ -5,7 +5,7 @@ import '../page/page_flip.dart';
 class PageFlipController {
   late PageFlip _pageFlip;
 
-  initializeController({required PageFlip pageFlip}) {
+  void initializeController({required PageFlip pageFlip}) {
     _pageFlip = pageFlip;
   }
 
@@ -52,10 +52,12 @@ class PageFlipController {
   /// Returns true if the navigation was successful, false if the page index is invalid
   bool goToPage(int pageIndex) {
     if (pageIndex < 0 || pageIndex >= pageCount) return false;
-    
-    final currentSpread = _pageFlip.getPageCollection()?.getCurrentSpreadIndex() ?? 0;
-    final nextSpread = _pageFlip.getPageCollection()?.getSpreadIndexByPage(pageIndex) ?? 0;
-    
+
+    final currentSpread =
+        _pageFlip.getPageCollection()?.getCurrentSpreadIndex() ?? 0;
+    final nextSpread =
+        _pageFlip.getPageCollection()?.getSpreadIndexByPage(pageIndex) ?? 0;
+
     if ((nextSpread - currentSpread).abs() > 1) {
       // Instant jump to avoid lag from loading multiple heavy PDF textures at once
       _pageFlip.turnToPage(pageIndex);

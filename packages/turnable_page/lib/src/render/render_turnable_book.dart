@@ -804,17 +804,19 @@ class RenderTurnableBook extends RenderBox
     if (settings.onlyVerticalPageFlip) {
       return Offset(event.localPosition.dx, size.height - 1);
     }
-    
+
     if (event is PointerDownEvent) {
       _rawInitialPointerOffset = event.localPosition;
-      _effectiveCornerY = event.localPosition.dy < size.height / 2 ? 0.0 : size.height;
+      _effectiveCornerY = event.localPosition.dy < size.height / 2
+          ? 0.0
+          : size.height;
     }
-    
+
     if (_rawInitialPointerOffset != null) {
       double dy = event.localPosition.dy - _rawInitialPointerOffset!.dy;
       return Offset(event.localPosition.dx, _effectiveCornerY + dy);
     }
-    
+
     return event.localPosition;
   }
 

@@ -65,6 +65,9 @@ class FlipSettings {
   /// Extra normalized progress allowance for inertia completion (0-1)
   final double inertiaProgressBoost;
 
+  /// Normalized flip progress required to complete when released (0-1)
+  final double completionProgressThreshold;
+
   /// Vertical sag amplitude as fraction of page height (0 = straight line)
   final double sagAmplitude;
 
@@ -119,6 +122,7 @@ class FlipSettings {
     this.enableInertia = true,
     this.inertiaVelocityThreshold = 900.0,
     this.inertiaProgressBoost = 0.15,
+    this.completionProgressThreshold = 0.35,
     this.sagAmplitude = 0.08,
     this.bendStrength = 0.6,
     this.onlyVerticalPageFlip = false,
@@ -146,6 +150,7 @@ class FlipSettings {
     bool? enableInertia,
     double? inertiaVelocityThreshold,
     double? inertiaProgressBoost,
+    double? completionProgressThreshold,
     double? sagAmplitude,
     double? bendStrength,
     bool? onlyVerticalPageFlip,
@@ -173,6 +178,8 @@ class FlipSettings {
       inertiaVelocityThreshold:
           inertiaVelocityThreshold ?? this.inertiaVelocityThreshold,
       inertiaProgressBoost: inertiaProgressBoost ?? this.inertiaProgressBoost,
+      completionProgressThreshold:
+          completionProgressThreshold ?? this.completionProgressThreshold,
       sagAmplitude: sagAmplitude ?? this.sagAmplitude,
       bendStrength: bendStrength ?? this.bendStrength,
       hideLeftShadow: hideLeftShadow ?? this.hideLeftShadow,

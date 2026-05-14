@@ -83,6 +83,10 @@ class _FlipReaderViewState extends State<FlipReaderView> {
               startPageIndex: pageNumber - 1,
               drawShadow: true,
               cornerTriggerAreaSize: 1.0,
+              swipeDistance: 64,
+              inertiaVelocityThreshold: 650,
+              inertiaProgressBoost: 0.22,
+              completionProgressThreshold: 0.32,
             ),
             builder: (context, index, constraints) {
               return _FlipPage(document: document, pageNumber: index + 1);

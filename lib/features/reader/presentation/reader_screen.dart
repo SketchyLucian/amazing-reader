@@ -13,7 +13,16 @@ import 'reader_state.dart';
 import 'reader_toolbar.dart';
 
 class ReaderScreen extends ConsumerStatefulWidget {
-  const ReaderScreen({super.key});
+  const ReaderScreen({
+    super.key,
+    this.title = 'Book Reader',
+    this.leading,
+    this.workflowPanel,
+  });
+
+  final String title;
+  final Widget? leading;
+  final Widget? workflowPanel;
 
   @override
   ConsumerState<ReaderScreen> createState() => _ReaderScreenState();
@@ -102,7 +111,8 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Book Reader'),
+        leading: widget.leading,
+        title: Text(widget.title),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 12),
@@ -121,52 +131,114 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          ReaderToolbar(
-            document: document,
-            pageStatus: readerState.pageStatus,
-            readerMode: readerState.readerMode,
-            onReaderModeChanged: _setReaderMode,
-            onPreviousPage: () => _goToRelativePage(-1),
-            onNextPage: () => _goToRelativePage(1),
-            onGoToPage: _goToPageNumber,
-          ),
-          if (readerState.errorMessage != null)
-            ReaderMessageBanner(
-              message: readerState.errorMessage!,
-              onDismiss: readerController.clearError,
+      body: _ReaderWorkspaceLayout(
+        workflowPanel: widget.workflowPanel,
+        child: Column(
+          children: [
+            ReaderToolbar(
+              document: document,
+              pageStatus: readerState.pageStatus,
+              readerMode: readerState.readerMode,
+              onReaderModeChanged: _setReaderMode,
+              onPreviousPage: () => _goToRelativePage(-1),
+              onNextPage: () => _goToRelativePage(1),
+              onGoToPage: _goToPageNumber,
             ),
-          Expanded(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 180),
-              child: document == null
-                  ? EmptyReaderState(
-                      onOpenPdf: readerState.isOpening
-                          ? null
-                          : readerController.openPdf,
-                    )
-                  : readerState.readerMode.isFlip
-                  ? FlipReaderView(
-                      key: ValueKey('flip-${document.id}'),
-                      document: document,
-                      pageStatus: readerState.pageStatus,
-                      onDocumentReady: _handleFlipDocumentReady,
-                      onPageChanged: _handlePageChanged,
-                    )
-                  : PdfReaderView(
-                      key: ValueKey('scroll-${document.id}'),
-                      controller: _pdfController,
-                      document: document,
-                      initialPageNumber:
-                          readerState.pageStatus.currentPage ?? 1,
-                      onViewerReady: _handleViewerReady,
-                      onPageChanged: _handlePageChanged,
-                    ),
+            if (readerState.errorMessage != null)
+              ReaderMessageBanner(
+                message: readerState.errorMessage!,
+                onDismiss: readerController.clearError,
+              ),
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: document == null
+                    ? EmptyReaderState(
+                        onOpenPdf: readerState.isOpening
+                            ? null
+                            : readerController.openPdf,
+                      )
+                    : readerState.readerMode.isFlip
+                    ? FlipReaderView(
+                        key: ValueKey('flip-${document.id}'),
+                        document: document,
+                        pageStatus: readerState.pageStatus,
+                        onDocumentReady: _handleFlipDocumentReady,
+                        onPageChanged: _handlePageChanged,
+                      )
+                    : PdfReaderView(
+                        key: ValueKey('scroll-${document.id}'),
+                        controller: _pdfController,
+                        document: document,
+                        initialPageNumber:
+                            readerState.pageStatus.currentPage ?? 1,
+                        onViewerReady: _handleViewerReady,
+                        onPageChanged: _handlePageChanged,
+                      ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _ReaderWorkspaceLayout extends StatelessWidget {
+  const _ReaderWorkspaceLayout({required this.child, this.workflowPanel});
+
+  final Widget child;
+  final Widget? workflowPanel;
+
+  @override
+  Widget build(BuildContext context) {
+    final workflowPanel = this.workflowPanel;
+    if (workflowPanel == null) return child;
+
+    final colorScheme = Theme.of(context).colorScheme;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 900) {
+          return Row(
+            key: const ValueKey('reader-workspace-wide'),
+            children: [
+              Expanded(child: child),
+              SizedBox(
+                width: 380,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    border: Border(
+                      left: BorderSide(color: colorScheme.outlineVariant),
+                    ),
+                  ),
+                  child: workflowPanel,
+                ),
+              ),
+            ],
+          );
+        }
+
+        final panelHeight = (constraints.maxHeight * 0.36).clamp(220.0, 320.0);
+        return Column(
+          key: const ValueKey('reader-workspace-compact'),
+          children: [
+            Expanded(child: child),
+            SizedBox(
+              height: panelHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  border: Border(
+                    top: BorderSide(color: colorScheme.outlineVariant),
+                  ),
+                ),
+                child: workflowPanel,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

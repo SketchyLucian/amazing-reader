@@ -6,10 +6,10 @@ import 'package:minimal_book_reader/app/book_reader_app.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('launches to the empty reader screen', (tester) async {
+  testWidgets('launches to the reading dashboard', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: BookReaderApp()));
 
-    expect(find.text('Book Reader'), findsOneWidget);
-    expect(find.text('Open a PDF to start reading'), findsOneWidget);
+    expect(find.text('Reading Dashboard'), findsWidgets);
+    expect(find.text('Start reading project'), findsOneWidget);
   });
 }

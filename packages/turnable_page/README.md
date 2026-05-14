@@ -143,6 +143,7 @@ Key tunables that remain:
 FlipSettings(
   cornerTriggerAreaSize: 0.15, // fraction of page diagonal for active corners
   swipeDistance: 80.0,         // drag distance threshold
+  completionProgressThreshold: 0.35, // release progress needed to turn
 )
 ```
 Removed flags: enableSmartGestures, disableFlipByClick, clickEventForward (behavior now automatic and consistent).
@@ -182,6 +183,7 @@ Configuration object for customizing flip behavior and appearance.
 | `showCover`           | `bool`     | `false`          | Whether the book has a front/back cover                    |
 | `mobileScrollSupport` | `bool`     | `true`           | Enable touch scrolling on mobile devices                   |
 | `swipeDistance`       | `double`   | `100.0`          | Minimum distance in pixels for swipe gesture               |
+| `completionProgressThreshold` | `double` | `0.35` | Flip progress required to complete when released |
 | `showPageCorners`     | `bool`     | `true`           | Show interactive corner highlighting on hover              |
 
 #### PageViewMode
